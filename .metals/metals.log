@@ -1136,3 +1136,4 @@ INFO: Unsupported notification method: $/setTrace
 2022.03.28 01:06:38 INFO  time: initialize in 3.17s
 2022.03.28 01:06:39 WARN  Build server is not auto-connectable.
 2022.03.28 01:06:39 WARN  no build tool detected in workspace '/Users/peyts25/WordleSolver'. The most common cause for this problem is that the editor was opened in the wrong working directory, for example if you use sbt then the workspace directory should contain build.sbt. 
+2022.03.28 01:38:50 INFO  shutting down Metals
