@@ -1,6 +1,6 @@
 # wordle-solver
 
-Run index.html in your default browser.
+Go to 'https://peytonk25.github.io/wordle-solver/'
 
 'Random Word' will choose a random 5-letter word as the solution for the computer to solve
 
