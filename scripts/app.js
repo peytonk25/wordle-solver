@@ -1,4 +1,8 @@
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
+
 
     let dbleDiction = [];
 
@@ -27,13 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         dict.pop();
 
+        dict.push("trope");
+
         let guessedWordAcc = 0;
 
         let availSpace = 1;
 
         let myAcc = 0;
 
-        const bestStarters = ["crane", "irate", "adieu", "canoe", "equal"];
+        const bestStarters = ["crane", "irate", "adieu", "canoe"];
 
         let startWord = bestStarters[Math.floor(Math.random() * bestStarters.length - 1)];
 
@@ -146,14 +152,31 @@ document.addEventListener("DOMContentLoaded", () => {
                     let print = Object.values(text);
                     startWord = print[3];
                     word = randWordReturn();
-                    return (Swal.fire({
+                    //ALLOW FOR CHOICE OF RANDOM/CHOSEN FINAL WORD
+                    Swal.fire({
                         icon: 'success',
                         html: "Your Starting Word is: " + '<b>' + startWord + '</b>'
-                    }),
+                    }).then((result) => {
+                        if (result.isConfirmed) {
                         Swal.fire({
-                            title: "The Solution is: ",
-                            text: word
-                        }))
+                            title: "Would you like to pick the final word?",
+                            showConfirmButton: true,
+                            showCancelButton: true,
+                            showDenyButton: true,
+                            denyButtonText: "Random Word",
+                            confirmButtonText: "Choose Word"
+                        }).then((choice) => {
+                            if (choice.isConfirmed) {
+                                swalFinal();
+                            } else if (choice.isDenied) {
+                                Swal.fire({
+                                    title: "The Solution is: ",
+                                    html: word
+                                })
+                            }
+                        })
+                    }
+                    })
                 } else {
                 }
             })
@@ -249,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }
                     handleEnteredWord();
                     let waitInt = 500 * myAcc;
+                    console.log(myAcc);
                     setTimeout(() => { Swal.fire({ 
                         title: "Solved!",
                         showCancelButton: true,
