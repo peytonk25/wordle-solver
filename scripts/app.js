@@ -1,4 +1,8 @@
+
+
+
 document.addEventListener("DOMContentLoaded", () => {
+
 
     let dbleDiction = [];
 
@@ -27,13 +31,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
         dict.pop();
 
+        dict.push("trope");
+
         let guessedWordAcc = 0;
 
         let availSpace = 1;
 
         let myAcc = 0;
 
-        const bestStarters = ["crane", "irate", "adieu", "canoe", "equal"];
+        const bestStarters = ["crane", "irate", "adieu", "canoe"];
 
         let startWord = bestStarters[Math.floor(Math.random() * bestStarters.length - 1)];
 
@@ -123,7 +129,7 @@ document.addEventListener("DOMContentLoaded", () => {
         var word;
 
         function swalStart() {
-            swal({
+            Swal.fire({
                 title: "Please input your word",
                 input: 'text',
                 inputAttributes: {
@@ -144,16 +150,33 @@ document.addEventListener("DOMContentLoaded", () => {
             }).then(function (text) {
                 if (text.dismiss !== 'cancel') {
                     let print = Object.values(text);
-                    startWord = print[0];
+                    startWord = print[3];
                     word = randWordReturn();
-                    return (swal({
-                        type: 'success',
-                        html: "Your Starting Word is: " + '<b>' + print + '</b>'
-                    }),
-                        swal({
-                            title: "The Solution is: ",
-                            text: word
-                        }))
+                    //ALLOW FOR CHOICE OF RANDOM/CHOSEN FINAL WORD
+                    Swal.fire({
+                        icon: 'success',
+                        html: "Your Starting Word is: " + '<b>' + startWord + '</b>'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                        Swal.fire({
+                            title: "Would you like to pick the final word?",
+                            showConfirmButton: true,
+                            showCancelButton: true,
+                            showDenyButton: true,
+                            denyButtonText: "Random Word",
+                            confirmButtonText: "Choose Word"
+                        }).then((choice) => {
+                            if (choice.isConfirmed) {
+                                swalFinal();
+                            } else if (choice.isDenied) {
+                                Swal.fire({
+                                    title: "The Solution is: ",
+                                    html: word
+                                })
+                            }
+                        })
+                    }
+                    })
                 } else {
                 }
             })
@@ -162,14 +185,14 @@ document.addEventListener("DOMContentLoaded", () => {
         function swalRand() {
             word = randWordReturn();
             startWord = startWord;
-            swal({
+            Swal.fire({
                 title: "The Word for This Puzzle is:",
                 html: '<b>' + word + '</b>'
             })
         }
 
         function swalFinal() {
-            swal({
+            Swal.fire({
                 title: "Please input your word",
                 input: 'text',
                 inputAttributes: {
@@ -181,19 +204,21 @@ document.addEventListener("DOMContentLoaded", () => {
                 showLoaderOnConfirm: true,
                 preConfirm: function (text) {
                     if (text.length != 5 || (dict.includes(text) === false)) {
-                        swal.showValidationError("Invalid Word!")
+                        Swal.showValidationMessage("Invalid Word!")
                     } else {
+                        console.log(text)
                         return text;
                     }
                 },
                 allowOutsideClick: false
             }).then(function (text) {
-                if (text.dismiss !== 'cancel') {
+                let conf = text.isConfirmed
+                if (conf) {
                     let print = Object.values(text);
-                    word = print[0];
-                    return (swal({
-                        type: 'success',
-                        html: "Your Final Word is: " + '<b>' + print + '</b>'
+                    word = print[3];
+                    return (Swal.fire({
+                        icon: 'success',
+                        html: "Your Final Word is: " + '<b>' + word + '</b>'
                     }))
                 } else {
                 }
@@ -224,23 +249,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function solver() {
             solveWord(startWord);
-            console.log(startWord);
         }
 
         function solveWord(oneWord) {
             let thisWord = oneWord;
             if (thisWord) {
                 if (myAcc > 5) {
-                    setTimeout(() => {swal({title: "You got me! :("})}, 500)
+                    setTimeout(() => {Swal.fire({
+                        title: "You got me! :(",
+                        showCancelButton: true,
+                        confirmButtonText: "Play Again?"
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        } else {
+                        }
+                    })}, 500)
                     return -1;
                 } else if (thisWord === word) {
-                    console.log(myAcc);
                     for (let i = 0; i < 5; i++) {
                         updateGuessedWord(thisWord[i]);
                     }
                     handleEnteredWord();
                     let waitInt = 500 * myAcc;
-                    setTimeout(() => { swal({ title: "Solved!" }) }, waitInt);
+                    console.log(myAcc);
+                    setTimeout(() => { Swal.fire({ 
+                        title: "Solved!",
+                        showCancelButton: true,
+                        confirmButtonText: "Play Again?",
+                }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.reload();
+                        } else {
+                        }
+                    })}, waitInt);
                     return 0;
                 } else {
                     greenSpots = [];
@@ -264,15 +306,16 @@ document.addEventListener("DOMContentLoaded", () => {
                     hasLetterWrongSpot(thisWord, yellowSpots);
                     letterRightSpot(thisWord, greenSpots);
 
-                    console.log(dict);
-
 
                     let newRand = randWordReturn();
                     myAcc += 1;
                     setTimeout(() => { solveWord(newRand) }, 500 * myAcc);
                 }
             } else {
-                swal({title: "Oops! Please refresh the page!"})
+                Swal.fire({title: "Oops! Refreshing the page!"}, 500).then((result) =>
+                 {
+                     location.reload();
+                 })
             }
 
         }
