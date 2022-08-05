@@ -32,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
         dict.pop();
 
         dict.push("trope");
+        dict.push("sarah");
 
         let guessedWordAcc = 0;
 
@@ -273,6 +274,19 @@ document.addEventListener("DOMContentLoaded", () => {
                     handleEnteredWord();
                     let waitInt = 500 * myAcc;
                     console.log(myAcc);
+                    if (word === "sarah") {
+                        setTimeout(() => { Swal.fire({ 
+                            title: "I Love You Short Stack :)",
+                            showCancelButton: true,
+                            confirmButtonText: "Play Again?",
+                    }).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            } else {
+                            }
+                        })}, waitInt);
+                        return 0;
+                    } else {
                     setTimeout(() => { Swal.fire({ 
                         title: "Solved!",
                         showCancelButton: true,
@@ -284,6 +298,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     })}, waitInt);
                     return 0;
+                }
                 } else {
                     greenSpots = [];
                     graySpots = [];
