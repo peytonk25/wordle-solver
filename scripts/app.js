@@ -8,10 +8,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let dict = [];
 
-    let myUrl = ['./scripts/sgb-words.txt']
+    let myUrl = './sgb-words.txt';
 
     async function fetchData() {
-        return (fetch(myUrl[0])
+        return (fetch(myUrl)
             .then(response =>
                 response.text().then(text => text.split(/\r|\n/))));
     }
