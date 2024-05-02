@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let dict = [];
 
-    let myUrl = ['./sgb-words.txt']
+    let myUrl = ['./scripts/sgb-words.txt']
 
     async function fetchData() {
         return (fetch(myUrl[0])
